@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block title %}All Items{% endblock %}
+
+{% block content %}
+            <div style="margin-top: 35px;">
+                <h1>{{ item.name }}</h1>
+            </div>
+            <br><br>
+                    <h3> {{ owner.name }}<i style="margin-left:15px"></i>{{ category.name }}</i></h3>
+            <div class="row" style="margin-top: 3%">
+                    <p>{{ item.description }}</p>
+            </div>
+            {% if 'username' in session %}
+            {% if session['user_id'] == owner.id %}
+            <div class="row" style="margin-top: 10px;">
+                <form>
+                    <a href="{{ url_for('edit_item', item_id=item.id) }}"><button type="button" >Edit</button></a>
+                    <a href="{{ url_for('delete_item', item_id=item.id) }}"><button type="button" >Delete</button></a>
+                </form>
+            </div>
+            {% endif %}
+            {% endif %}
+{% endblock %}

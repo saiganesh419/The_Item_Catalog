@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block title %}Update Item{% endblock %}
+
+{% block content %}
+               <h1>Update Item {{ item.name }}</h1>
+               <form method="POST">
+                    <div >
+                      <label >Title</label>
+                      <input name="name" type="text"  value="{{ item.name }}" required>
+                    </div>
+                    <div >
+                      <label>Category</label>
+                      <select name="category" required>
+                        {% for category in categories %}
+                          <option value="{{ category.id }}" {% if item.category_id == category.id %} selected {% endif %}>{{ category.name }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>                          
+                    <div >
+                      <label >Description</label>
+                      <br>
+                      <textarea name="description"  >{{item.description}}</textarea>
+                    </div><br>
+                    <button type="submit" >Update</button>
+                    <a href="{{ url_for('home') }}"><button type="button">Cancel</button></a>
+                  </form>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

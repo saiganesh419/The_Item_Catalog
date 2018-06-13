@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{% block title %}{% endblock %} | Item Catalog App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js">
+    </script>
+    {% block head %}{% endblock %}
+</head>
+<body>
+    
+        <h3><a class="left" href="{{ url_for('home') }}">Item Catalog</a></h3>
+        
+                {% if 'username' in session %}
+                <div class="right">
+                <img src="{{ session['picture'] }}" alt="Profile Picture" class ="right" style="height: 30px; width: 30px;">
+                        <p>Logged in as <strong>{{ session['username'] }}</strong></p>
+                        <hr>
+                        <a href="{{ url_for('logout') }}" class ="right">Log out</a>
+                 {% else %}
+                <a href="{{ url_for('login') }}" class ="right" ><button type="submit">Login or Sign up</button></a>
+                {% endif %}
+                </div>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class="flash">
+        {% for message in messages %}
+          <li><strong>{{message}}</strong></li>
+        {% endfor %}
+      </ul>
+    
+    {% endif %}
+    {% endwith %}
+
+{% block content %}
+{% endblock %}
+
+</body>
+</html>
