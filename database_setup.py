@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 # Module to set up database.
 from sqlalchemy import Column, ForeignKey, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
 # create a table with name user
+
+
 class User(Base):
     __tablename__ = "user"
     id = Column(Integer, primary_key=True)
@@ -16,6 +18,8 @@ class User(Base):
     picture = Column(String(250))
 
 # create a table with name category
+
+
 class Category(Base):
     __tablename__ = "category"
 
