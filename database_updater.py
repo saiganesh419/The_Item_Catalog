@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 
 
 engine = create_engine('sqlite:///itemscatalog.db',
-                          connect_args={'check_same_thread': False})
+                       connect_args={'check_same_thread': False})
 
 Session = sessionmaker(bind=engine)
 
