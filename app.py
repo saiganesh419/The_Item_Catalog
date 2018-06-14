@@ -416,11 +416,11 @@ def show_items_in_category(category_id):
 @qwerty.route('/catalog/category/<int:category_id>/edit/',
               methods=['GET', 'POST'])
 def edit_category(category_id):
-    category = session.query(Category).filter_by(id=category_id).first()
-
     if 'username' not in login_session:
         flash("Please log in to continue.")
         return redirect(url_for('login'))
+
+    category = session.query(Category).filter_by(id=category_id).first()
 
     if not exists_category(category_id):
         flash("We are unable to process your request.")
@@ -446,11 +446,11 @@ def edit_category(category_id):
 @qwerty.route('/catalog/category/<int:category_id>/delete/',
               methods=['GET', 'POST'])
 def delete_category(category_id):
-    category = session.query(Category).filter_by(id=category_id).first()
-
     if 'username' not in login_session:
         flash("Please log in to continue.")
         return redirect(url_for('login'))
+
+        category = session.query(Category).filter_by(id=category_id).first()
 
     if not exists_category(category_id):
         flash("We are unable to process your request.")
