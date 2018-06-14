@@ -22,7 +22,7 @@ To Develop an application that Registered users will have the ability to post, e
 
 4. To add data to our database, run the command 'python database_updater.py'
 
-5. To intialize server, by run 'python main.py' in terminal.
+5. To intialize server, by run 'python app.py' in terminal.
 
 6. After running server,open the browser 'https://localhost:5000'
 
