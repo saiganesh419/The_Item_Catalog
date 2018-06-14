@@ -450,15 +450,9 @@ def delete_category(category_id):
         flash("Please log in to continue.")
         return redirect(url_for('login'))
 
-        category = session.query(Category).filter_by(id=category_id).first()
+    category = session.query(Category).filter_by(id=category_id).first()
 
     if not exists_category(category_id):
-        flash("We are unable to process your request.")
-        return redirect(url_for('home'))
-
-    # If the logged in user does not have authorisation to
-    # edit the category, redirect to homepage.
-    if login_session['user_id'] != category.user_id:
         flash("We are unable to process your request.")
         return redirect(url_for('home'))
 
