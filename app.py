@@ -14,7 +14,7 @@ import httplib2
 import random
 import string
 
-qwerty = Flask(__name__)
+app = Flask(__name__)
 
 # Load Google Sign-in API Client ID.
 CLIENT_ID = json.loads(
@@ -29,9 +29,9 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 
-@qwerty.route('/')
-@qwerty.route('/catalog/')
-@qwerty.route('/catalog/items/')
+@app.route('/')
+@app.route('/catalog/')
+@app.route('/catalog/items/')
 def home():
     categories = session.query(Category).all()
     items = session.query(Item).all()
@@ -40,7 +40,7 @@ def home():
 
 
 # anti-forgery state token
-@qwerty.route('/login/')
+@app.route('/login/')
 def login():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in range(32))
@@ -49,7 +49,7 @@ def login():
 
 
 # Connect to the Google Sign-in oAuth method.
-@qwerty.route('/gconnect', methods=['POST'])
+@app.route('/gconnect', methods=['POST'])
 def gconnect():
     # Validate state token
     if request.args.get('state') != login_session['state']:
@@ -163,7 +163,7 @@ def gdisconnect():
 
 
 # Log out the currently connected user.
-@qwerty.route('/logout')
+@app.route('/logout')
 def logout():
     if 'username' in login_session:
         gdisconnect()
@@ -207,7 +207,7 @@ def get_user_id(email):
 
 
 # Add a new category.
-@qwerty.route("/catalog/category/new/", methods=['GET', 'POST'])
+@app.route("/catalog/category/new/", methods=['GET', 'POST'])
 def add_category():
     if 'username' not in login_session:
         flash("Please log with your to continue.")
@@ -235,7 +235,7 @@ def add_category():
 
 
 # Create a new item.
-@qwerty.route("/catalog/item/new/", methods=['GET', 'POST'])
+@app.route("/catalog/item/new/", methods=['GET', 'POST'])
 def add_item():
     if 'username' not in login_session:
         flash("Please log in to continue.")
@@ -269,7 +269,7 @@ def add_item():
 
 
 # Create new item by Category ID.
-@qwerty.route("/catalog/category/<int:category_id>/item/new/",
+@app.route("/catalog/category/<int:category_id>/item/new/",
               methods=['GET', 'POST'])
 def add_item_by_category(category_id):
     if 'username' not in login_session:
@@ -315,7 +315,7 @@ def exists_category(category_id):
 
 
 # View an item by its ID.
-@qwerty.route('/catalog/item/<int:item_id>/')
+@app.route('/catalog/item/<int:item_id>/')
 def view_item(item_id):
     if exists_item(item_id):
         item = session.query(Item).filter_by(id=item_id).first()
@@ -334,7 +334,7 @@ def view_item(item_id):
 
 
 # Edit existing item.
-@qwerty.route("/catalog/item/<int:item_id>/edit/", methods=['GET', 'POST'])
+@app.route("/catalog/item/<int:item_id>/edit/", methods=['GET', 'POST'])
 def edit_item(item_id):
     if 'username' not in login_session:
         flash("Please log in to continue.")
@@ -371,7 +371,7 @@ def edit_item(item_id):
 
 
 # Delete existing item.
-@qwerty.route("/catalog/item/<int:item_id>/delete/", methods=['GET', 'POST'])
+@app.route("/catalog/item/<int:item_id>/delete/", methods=['GET', 'POST'])
 def delete_item(item_id):
     if 'username' not in login_session:
         flash("Please log in to continue.")
@@ -396,7 +396,7 @@ def delete_item(item_id):
 
 
 # Show items in a particular category.
-@qwerty.route('/catalog/category/<int:category_id>/items/')
+@app.route('/catalog/category/<int:category_id>/items/')
 def show_items_in_category(category_id):
     if not exists_category(category_id):
         flash("We are unable to process your request.")
@@ -413,7 +413,7 @@ def show_items_in_category(category_id):
 
 
 # Edit a category.
-@qwerty.route('/catalog/category/<int:category_id>/edit/',
+@app.route('/catalog/category/<int:category_id>/edit/',
               methods=['GET', 'POST'])
 def edit_category(category_id):
     if 'username' not in login_session:
@@ -443,7 +443,7 @@ def edit_category(category_id):
 
 
 # Delete a category.
-@qwerty.route('/catalog/category/<int:category_id>/delete/',
+@app.route('/catalog/category/<int:category_id>/delete/',
               methods=['GET', 'POST'])
 def delete_category(category_id):
     if 'username' not in login_session:
@@ -468,14 +468,14 @@ def delete_category(category_id):
 # JSON Endpoints
 
 # Return JSON of all the items in the catalog.
-@qwerty.route('/api/v1/catalog.json')
+@app.route('/api/v1/catalog.json')
 def show_catalog_json():
     items = session.query(Item).order_by(Item.id.desc())
     return jsonify(catalog=[i.serialize for i in items])
 
 
 # Return JSON of a particular item in the catalog.
-@qwerty.route(
+@app.route(
     '/api/v1/categories/<int:category_id>/item/<int:item_id>/JSON')
 def catalog_item_json(category_id, item_id):
     if exists_category(category_id) and exists_item(item_id):
@@ -495,12 +495,12 @@ def catalog_item_json(category_id, item_id):
 # Return JSON of all categories in the catalog.
 
 
-@qwerty.route('/api/v1/categories/JSON')
+@app.route('/api/v1/categories/JSON')
 def categories_json():
     categories = session.query(Category).all()
     return jsonify(categories=[i.serialize for i in categories])
 
 
 if __name__ == "__main__":
-    qwerty.secret_key = 'the_new_secret_key'
-    qwerty.run(host="0.0.0.0", port=5000, debug=True)
+    app.secret_key = 'the_new_secret_key'
+    app.run(host="0.0.0.0", port=5000, debug=True)
